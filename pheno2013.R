@@ -1,22 +1,29 @@
-library(doParallel)
-library(doMPI)
 
-source('/home/thalles/Desktop/OpenairSPfunctions.R')
 
-source('/home/thalles/OpenAirWD/openAirHySplit.R')
+########################
+# If the required package is not available, download it
+if( !require("doParallel", character.only = TRUE)){
+    install.packages("doParallel", dependencies = T)
+}
+
+# If the required package is not available, download it
+if( !require("doMPI", character.only = TRUE)){
+    install.packages("doMPI", dependencies = T)
+}
+
+source('OpenairSPfunctions.R')
+
+source('openAirHySplit.R')
 
 ########################
 # SETUP VARIABLES
 
 YEAR<-2008
 HEIGHT<-200
-MET.FILES<-"/home/thalles/Desktop/hysplit/trunk/working/met2008/"
-OUT.FILES<-paste("/home/thalles/OpenAirWD/pheno2008/", HEIGHT, "M/", sep="")
-PHENO<-"/home/thalles/Documents/Pheno2008.csv"
+MET.FILES<-"/home/thalles/Desktop/hysplit/trunk/working/met2012/"
+OUT.FILES<-paste("/home/thalles/Desktop/Code/pheno2012/", HEIGHT, "M/", sep="")
+PHENO<-"Pheno2012.csv"
 HYSPLIT.PATH = "/home/thalles/Desktop/hysplit/trunk/"
-
-########################
-
 
 # # read the data
 # pheno2013<-read.csv(PHENO)

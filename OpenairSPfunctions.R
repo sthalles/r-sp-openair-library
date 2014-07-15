@@ -1,11 +1,36 @@
-library(openair)
-library(rgdal)
-library(sp)
-library(raster)
-library(plyr)
+if( !require("openair") ) { 
+    install.packages("openair") 
+    library("openair")
+}
+
+if( !require("rgdal") ) { 
+    install.packages("rgdal")
+    library("rgdal")
+}
+
+if( !require("sp") ) { 
+    install.packages("sp")
+    library("sp")
+}
+
+if( !require("raster") ) { 
+    install.packages("raster")
+    library("raster")
+}
+
+if( !require("plyr") ) { 
+    install.packages("plyr")
+    library("plyr")
+}
+
+if( !require("doMC") ) { 
+    install.packages("doMC")
+    library("doMC")
+}
 
 # load the Canada's map
-#canada <- readOGR("/home/thalles/Desktop","province")
+
+# canada <- readOGR("/home/thalles/Desktop","province")
 
 # source('/home/thalles/OpenAirWD/openAirHySplit.R')
 # 
@@ -89,16 +114,7 @@ DF2SLDF<-function( spLines, df, crs )
 # Input: DataFrame
 # Output: SpatialLines
 DF2SpLines<-function( df, crs, ... )
-{
-#     # get the number of cores available for parallel execution
-#     cores<-detectCores()
-#     
-#     # set up the parallel cluster
-#     cl <- startMPIcluster(count=cores)
-#     
-#     # register the cluster
-#     registerDoMPI(cl)
-#     
+{   
 #     # list to hold elements of type Lines
 #     linesList<-list()
 #     
@@ -113,8 +129,6 @@ DF2SpLines<-function( df, crs, ... )
 #     # split the dataframe's elements based of its ID
 #     # each trajectory has its own ID
 #     dataFrames<-split(df, df$ID)  
-#     
-#     head(dataFrames)
 #     
 #     start.time<-Sys.time()
 #     
@@ -136,17 +150,8 @@ DF2SpLines<-function( df, crs, ... )
 #     end.time<-Sys.time()
 #     time.taken<-end.time - start.time 
 #     time.taken
-#     
-#     closeCluster(cl)
-    
-    # get the number of phisical cores availables
-#     cores<-detectCores()
-#     
-#     cl <- makeCluster(cores)
-#     
-#     registerDoParallel(cl)
 
-#    start.time<-Sys.time()
+    start.time<-Sys.time()
     
     max.traj.length<-max(abs(df$hour.inc)) + 1
     
@@ -179,11 +184,9 @@ DF2SpLines<-function( df, crs, ... )
     spLines<-SpatialLines(linesList)
     proj4string(spLines)<-crs
     
-#     end.time<-Sys.time()
-#     time.taken<-end.time - start.time 
-#     time.taken
-    
-#    stopCluster(cl)
+    end.time<-Sys.time()
+    time.taken<-end.time - start.time 
+    time.taken
     
     return(spLines)
 }
