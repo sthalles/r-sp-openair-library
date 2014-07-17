@@ -364,11 +364,11 @@ SplitSpLines <- function( sp.lines, into ) {
   # Serial Execution
   count <- 1
   
-  for (i in seq(from=1, to=length(sp.lines), into=interval)) {
+  for (i in seq(from=1, to=length(sp.lines), by=interval)) {
     if (count != into){
       sp.list <- c(sp.list, (sp.lines[i:(i + interval - 1)]))
     } else {
-      sp.list <- c(sp.list, (sp.lines[i:length(sp)]))
+      sp.list <- c(sp.list, (sp.lines[i:length(sp.lines)]))
       break
     }
     count <- count + 1

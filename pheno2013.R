@@ -19,7 +19,7 @@ source('openAirHySplit.R')
 # SETUP VARIABLES
 
 YEAR<-2012
-HEIGHT<-300
+HEIGHT<-400
 MET.FILES<-"/home/thalles/Desktop/hysplit/trunk/working/met2012/"
 OUT.FILES<-paste("/home/thalles/Desktop/Code/pheno2012/", HEIGHT, "M/", sep="")
 PHENO<-"Pheno2012.csv"
@@ -169,7 +169,11 @@ print("CREATINT SPLINES OBJECTS")
 
 spLines<-Df2SpLines(data.frame, crs)
 
+remove(data.frame)
+
 list.splines<-SplitSpLines( spLines, cores )
+
+remove(spLines)
 
 # load the doMPI package
 #library(doMPI)
@@ -266,7 +270,7 @@ getRasterGrid<-function( spLines )
 # get the number of phisical cores availables
 cores<-detectCores()
 
-cl <- makeCluster(cores)
+cl <- makeCluster(cores)-1
 
 registerDoParallel(cl)
 
