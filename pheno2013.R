@@ -13,16 +13,16 @@ if( !require("doMPI", character.only = TRUE)){
 
 source('OpenairSPfunctions.R')
 
-source('openAirHySplit.R')
+# source('openAirHySplit.R')
 
 ########################
 # SETUP VARIABLES
 
-YEAR<-2012
-HEIGHT<-400
-MET.FILES<-"/home/thalles/Desktop/hysplit/trunk/working/met2012/"
-OUT.FILES<-paste("/home/thalles/Desktop/Code/pheno2012/", HEIGHT, "M/", sep="")
-PHENO<-"Pheno2012.csv"
+YEAR<-2010
+HEIGHT<-300
+MET.FILES<-"/home/thalles/Desktop/hysplit/trunk/working/met2010/"
+OUT.FILES<-paste("/home/thalles/OpenAirWD/pheno2010/", HEIGHT, "M/", sep="")
+PHENO<-"/home/thalles/Documents/Pheno2010.csv"
 HYSPLIT.PATH = "/home/thalles/Desktop/hysplit/trunk/"
 
 # # read the data
@@ -270,7 +270,7 @@ getRasterGrid<-function( spLines )
 # get the number of phisical cores availables
 cores<-detectCores()
 
-cl <- makeCluster(cores)-1
+cl <- makeCluster(cores)
 
 registerDoParallel(cl)
 
