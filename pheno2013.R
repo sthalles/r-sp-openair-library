@@ -1,4 +1,5 @@
 
+setwd("/home/thalles/Desktop/r-sp-openair-library")
 
 ########################
 # If the required package is not available, download it
@@ -13,20 +14,20 @@ if( !require("doMPI", character.only = TRUE)){
 
 source('OpenairSPfunctions.R')
 
-# source('openAirHySplit.R')
+source('openAirHySplit.R')
 
 ########################
 # SETUP VARIABLES
 
-YEAR<-2010
-HEIGHT<-300
-MET.FILES<-"/home/thalles/Desktop/hysplit/trunk/working/met2010/"
-OUT.FILES<-paste("/home/thalles/OpenAirWD/pheno2010/", HEIGHT, "M/", sep="")
-PHENO<-"/home/thalles/Documents/Pheno2010.csv"
-HYSPLIT.PATH = "/home/thalles/Desktop/hysplit/trunk/"
+kYear <- 2013
+KHeight <- 500
+KMetFiles <- "/home/thalles/Desktop/hysplit/trunk/working/met2013/"
+KOutFiles <- paste("/home/thalles/OpenAirWD/pheno2013/", KHeight, "M/", sep="")
+KPheno <- "/home/thalles/Documents/Pheno2013.csv"
+KHySplitPath <- "/home/thalles/Desktop/hysplit/trunk/"
 
 # # read the data
-# pheno2013<-read.csv(PHENO)
+# pheno2013<-read.csv(KPheno)
 # 
 # # subset the data, in order to get only the points with ID = 1
 # pointsDf<-split(pheno2013, pheno2013$ID)
@@ -74,8 +75,8 @@ HYSPLIT.PATH = "/home/thalles/Desktop/hysplit/trunk/"
 #     
 #     procTraj(lat = lat, lon = long, year = Year, name = output.file.name,
 #              start.month=start.month, start.day=start.day, end.month=end.month, end.day=end.day, hour.interval="1 hour",
-#              met = MET.FILES, out = OUT.FILES, 
-#              hours = 3, height = HEIGHT, hy.path = HYSPLIT.PATH, ID=i ) 
+#              met = KMetFiles, out = KOutFiles, 
+#              hours = 3, height = KHeight, hy.path = KHySplitPath, ID=i ) 
 #     
 # }
 # 
@@ -88,24 +89,24 @@ HYSPLIT.PATH = "/home/thalles/Desktop/hysplit/trunk/"
 ###################################
 # READ THE TRAJECTORIES
 ###################################
-print("READING HYSPLIT TRAJECTORIES")
+print("Reading HySplit pre-calculated Trajectories")
 
 # get the number of phisical cores availables
-cores<-detectCores()
+cores <- detectCores()
 
 cl <- makeCluster(cores)
 
 registerDoParallel(cl)
 
-path<-OUT.FILES
+path <- KOutFiles
 
 # list all files
-files<-list.files(path=path)
+files <- list.files(path=path)
 
 # remove the file extensions
-files<-sub("\\.[[:alnum:]]+$", "", files)
+files <- sub("\\.[[:alnum:]]+$", "", files)
 
-start.time<-Sys.time()
+start.time <- Sys.time()
 
 # iterate through all files and open it
 # merge all files in one data frame
@@ -118,13 +119,13 @@ data.frame <- foreach( file=files, .combine=rbind, .packages='openair' ) %dopar%
     #traj2013<-selectByDate(traj2013, start = "27/07/2013", end = "27/07/2013", hour=19:21)
 }
 
-end.time<-Sys.time()
-time.taken<-end.time - start.time 
+end.time <- Sys.time()
+time.taken <- end.time - start.time 
 time.taken
 
 stopCluster(cl)
 
-crs<-CRS("+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0")
+crs <- CRS("+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0")
 # spLines<-DF2SpLines(data.frame, crs) # create a SpatialLines object
 # spLinesDF<-DF2SLDF( spLines, data.frame, crs )
 # plotTraj(spLines, col="blue")
@@ -150,7 +151,7 @@ crs<-CRS("+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0")
 # # of your points using the cells of rast, values from the IP field:
 # rast2 <- rasterize(spLines, rast,  fun='count') 
 # 
-# tiff.file.name<-paste("pheno", YEAR, "_", HEIGHT, "M", sep="")
+# tiff.file.name<-paste("pheno", kYear, "_", KHeight, "M", sep="")
 # 
 # writeRaster(rast2, tiff.file.name, format="GTiff", overwrite=T)
 
@@ -165,13 +166,13 @@ crs<-CRS("+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0")
 # CREATE SP LINES OBJECTS IN PARALLEL
 ###################
 
-print("CREATINT SPLINES OBJECTS")
+print("Creating SpatialLines Object")
 
-spLines<-Df2SpLines(data.frame, crs)
+spLines <- Df2SpLines(data.frame, crs)
 
 remove(data.frame)
 
-list.splines<-SplitSpLines( spLines, cores )
+list.splines <- SplitSpLines( spLines, cores )
 
 remove(spLines)
 
@@ -301,7 +302,7 @@ rast2<-Reduce("+", rast2)
 # replace all 0 values per NA
 rast2[rast2==0]<-NA
 
-tiff.file.name<-paste("pheno", YEAR, "_", HEIGHT, "M", sep="")
+tiff.file.name<-paste("pheno", kYear, "_", KHeight, "M", sep="")
 
 writeRaster(rast2, tiff.file.name, format="GTiff", overwrite=T)
 
