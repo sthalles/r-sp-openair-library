@@ -19,72 +19,72 @@ source('openAirHySplit.R')
 ########################
 # SETUP VARIABLES
 
-kYear <- 2013
-KHeight <- 500
-KMetFiles <- "/home/thalles/Desktop/hysplit/trunk/working/met2013/"
-KOutFiles <- paste("/home/thalles/OpenAirWD/pheno2013/", KHeight, "M/", sep="")
-KPheno <- "/home/thalles/Documents/Pheno2013.csv"
+kYear <- 2012
+KHeight <- 100
+KMetFiles <- "/home/thalles/Desktop/hysplit/trunk/working/met2012/"
+KOutFiles <- paste("/home/thalles/OpenAirWD/pheno2012/", KHeight, "M/", sep="")
+KPheno <- "/home/thalles/Documents/Pheno2012.csv"
 KHySplitPath <- "/home/thalles/Desktop/hysplit/trunk/"
 
-# # read the data
-# pheno2013<-read.csv(KPheno)
-# 
-# # subset the data, in order to get only the points with ID = 1
-# pointsDf<-split(pheno2013, pheno2013$ID)
-# 
-# # get the number of phisical cores availables
-# cores<-detectCores()-2
-# 
-# cl <- makeCluster(cores)
-# 
-# registerDoParallel(cl)
-# 
-# #cleanWD("/home/thalles/Desktop/hysplit/trunk/")
-# 
-# start.time<-Sys.time()
-# 
-# #length(pointsDf)
-# 
-# foreach(i=1:length(pointsDf)) %dopar% 
-# {
-#     points<-as.data.frame(pointsDf[i])
-#     
-#     # get the point's latitude and longitude
-#     lat<-points[[2]][1]
-#     long<-points[[3]][1]
-#     
-#     # get the max and min date
-#     start.date<-as.Date(points[[4]][1]) # transform to object of type date
-#     end.date<-as.Date(points[[4]][nrow(points)]) # transform to object of type date
-#     
-#     # extract the start Year, Month, and Day
-#     Year <- format(start.date, "%Y") # long format (4 digit year)
-#     start.month<-format(start.date, "%m")
-#     start.day<-format(start.date, "%d")
-#     
-#     # extract the end Month, and Day
-#     end.month<-format(end.date, "%m")
-#     end.day<-format(end.date, "%d")
-#     
-#     
-#     ########################
-#     output.file.name<-""
-#     output.file.name<-paste("pheno", "_", as.character(i), "_", sep="")
-# 
-#     #print(output.file.name)
-#     
-#     procTraj(lat = lat, lon = long, year = Year, name = output.file.name,
-#              start.month=start.month, start.day=start.day, end.month=end.month, end.day=end.day, hour.interval="1 hour",
-#              met = KMetFiles, out = KOutFiles, 
-#              hours = 3, height = KHeight, hy.path = KHySplitPath, ID=i ) 
-#     
-# }
-# 
-# end.time<-Sys.time()
-# time.taken<-end.time - start.time 
-# time.taken
-# 
-# stopCluster(cl)
+# read the data
+pheno2013<-read.csv(KPheno)
+
+# subset the data, in order to get only the points with ID = 1
+pointsDf<-split(pheno2013, pheno2013$ID)
+
+# get the number of phisical cores availables
+cores<-detectCores()-2
+
+cl <- makeCluster(cores)
+
+registerDoParallel(cl)
+
+# cleanWD("/home/thalles/Desktop/hysplit/trunk/")
+
+start.time<-Sys.time()
+
+# length(pointsDf)
+
+foreach(i=1:1) %dopar% 
+{
+    points<-as.data.frame(pointsDf[i])
+    
+    # get the point's latitude and longitude
+    lat<-points[[2]][1]
+    long<-points[[3]][1]
+    
+    # get the max and min date
+    start.date<-as.Date(points[[4]][1]) # transform to object of type date
+    end.date<-as.Date(points[[4]][nrow(points)]) # transform to object of type date
+    
+    # extract the start Year, Month, and Day
+    Year <- format(start.date, "%Y") # long format (4 digit year)
+    start.month<-format(start.date, "%m")
+    start.day<-format(start.date, "%d")
+    
+    # extract the end Month, and Day
+    end.month<-format(end.date, "%m")
+    end.day<-format(end.date, "%d")
+    
+    
+    ########################
+    output.file.name<-""
+    output.file.name<-paste("pheno", "_", as.character(i), "_", sep="")
+
+    #print(output.file.name)
+    
+    ProcTraj(lat = lat, lon = long, year = Year, name = output.file.name,
+             start.month = start.month, start.day = start.day, end.month = end.month, end.day = end.day, hour.interval = 1,
+             met = KMetFiles, out = KOutFiles, 
+             hours = 3, height = KHeight, hy.path = KHySplitPath, ID = i ) 
+    
+}
+
+end.time<-Sys.time()
+time.taken<-end.time - start.time 
+time.taken
+
+stopCluster(cl)
 
 ###################################
 # READ THE TRAJECTORIES

@@ -84,9 +84,9 @@ AddMetFiles <- function(month, Year, met, bat.file, control.file)
 }
 
 # 
-ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010, start.month=05, 
-                     start.day=01, end.month=05, end.day=02, 
-                     hour.interval="1 hour", name = "london",
+ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010, start.month = 05, 
+                     start.day = 01, end.month = 05, end.day = 02, 
+                     hour.interval = 1, name = "london",
                      met = "c:/users/david/TrajData/", 
                      out = "c:/users/david/TrajProc/", 
                      hours = 12, height = 100, 
@@ -138,8 +138,10 @@ ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010, start.month=05,
   
   end <- paste(year, end.month, end.day, sep = "-")
   end <- paste(end, "23:00", sep = " ")
-  #print(end)
-  dates <- seq(as.POSIXct(start, "EST"), as.POSIXct(end, "EST"), by = "1 hour")
+  
+  hour.interval <- paste( hour.interval, "hour", sep=" ")
+  
+  dates <- seq(as.POSIXct(start, "EST"), as.POSIXct(end, "EST"), by = hour.interval)
   
   for (i in 1:length(dates)) {
     control.file <- "CONTROL"
