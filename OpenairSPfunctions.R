@@ -338,8 +338,9 @@ PlotTrajFreq <- function( traj, resolution=10000, gridX=1, gridY=1, ... )
 }
 
 SplitSpLines <- function( sp.lines, into ) {
-  # One Sentence description of the function
-  #
+  # This function divides the data in the object of class SpatialLines into
+  # groups defined by into. 
+  # 
   # Args:
   #   sp.lines: An SpLines Object with more than one line.
   #   into: An integer value. into must be less than or equal to  
@@ -375,6 +376,73 @@ SplitSpLines <- function( sp.lines, into ) {
   sp.list
 }
 
+
+RasterizeTraj <- function(list.splines, reduce = T) {
+  # This function produces a RasterLayer object with the trajectories' frequency
+  # 
+  # Args:
+  #   list.splines: A list of SpatialLines objects.
+  #   reduce: boolean: Indicates whether or not the processes must be done
+  #   in parallel
+  #
+  # Returns:
+  #   An obejct of class RasterLayer
+  getRasterGrid <- function(sp.lines, xmn=-80, xmx=-61, 
+                            ymn=44, ymx=52, ncols=40,
+                            nrows=40, resolution=10000)
+  {
+    # create raster object
+    rast <- raster(xmn = xmn, 
+                   xmx = xmx, 
+                   ymn = ymn, 
+                   ymx = ymx, 
+                   ncols = ncols, 
+                   nrows = nrows)
+    
+    
+    # set all the grids to NA
+    rast <- setValues(rast, NA)
+    
+    crs1 <- "+proj=aea +lat_1=46 +lat_2=60 +lat_0=44 +lon_0=-68.5 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
+    rast <- projectRaster(rast, crs = crs1, res = resolution)
+    
+    # get the projection from the sp object
+    crs2 <- proj4string(sp.lines)
+    
+    # Reproject
+    rast <- projectRaster(rast, crs = crs2)
+    
+    rast
+  }
+  
+  # get the number of phisical cores availables
+  cores<-detectCores()
+  
+  cl <- makeCluster(cores)
+  
+  registerDoParallel(cl)
+  
+  rast2 <- foreach(i=list.splines, .combine='c', .packages="raster") %dopar%
+  {
+    # And then ... rasterize it! This creates a grid version 
+    # of your points using the cells of rast, values from the IP field:
+    rast <- getRasterGrid(i)
+    
+    rasterize(i, rast, fun='count', background=0) 
+  }
+
+  stopCluster(cl)
+  
+  if(reduce == T){
+    rast2 <- Reduce("+", rast2)
+    
+    # replace all 0 values per NA
+    rast2[rast2==0] <- NA
+    
+  }
+  rast2
+
+}
 
 
 
