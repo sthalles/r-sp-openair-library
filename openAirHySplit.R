@@ -4,7 +4,7 @@
 
 script.name="test"
 
-ReadFiles <- function(hours = 96, hy.path, ID) 
+ReadFiles <- function(hours = 96, hy.path, ID, dates) 
 {
   # 
   #
@@ -21,6 +21,12 @@ ReadFiles <- function(hours = 96, hy.path, ID)
   # find tdump files
   files <- Sys.glob(dump.file.name)
   output <- file(combine.file.name, 'w')
+  
+  if(length(dates) != length(files)){
+    print(length(dates))
+    print(length(files))
+    stop("Error! Finalmente te peguei!")
+  }
   
   #print(files)
   
@@ -84,13 +90,14 @@ AddMetFiles <- function(month, Year, met, bat.file, control.file)
 }
 
 # 
-ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010, start.month = 05, 
-                     start.day = 01, end.month = 05, end.day = 02, 
+ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010, 
                      hour.interval = 1, name = "london",
                      met = "c:/users/david/TrajData/", 
                      out = "c:/users/david/TrajProc/", 
                      hours = 12, height = 100, 
-                     hy.path = "/home/thalles/Desktop/hysplit/trunk/", ID) {
+                     hy.path = "/home/thalles/Desktop/hysplit/trunk/", ID,
+                     dates, hy.split.exec.dir ) {
+  
   # This function setsup and executes hysplit. The ProcTraj function is 
   # designed for parallel execution.
   #
@@ -98,10 +105,6 @@ ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010, start.month = 05,
   #   lat:
   #   lon:
   #   year:
-  #   start.month:
-  #   start.day:
-  #   end.month:
-  #   end.day:
   #   hour.interval:
   #   name:
   #   met:
@@ -132,19 +135,33 @@ ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010, start.month = 05,
   # name of BAT file to add to/run
   bat.file <- paste0(hy.path, "working/", bat.file.name) 
   
-  start <- paste(year, start.month, start.day, sep = "-")
-  start <- paste(start, "00:00", sep = " ")
-  #print(start)
+  ###################
+  # process the dates
+  dates.and.times <- c()
   
-  end <- paste(year, end.month, end.day, sep = "-")
-  end <- paste(end, "23:00", sep = " ")
+  for( i in 1:length(dates) ){
+    start.day <- paste(dates[i], "00:00", sep=" ")
+    end.day <- paste(dates[i], "23:00", sep=" ")
+    
+    posix.date <- seq(as.POSIXct(start.day, "EST"), as.POSIXct(end.day, "EST"), by = "1 hour")
+    char.date <- as.character(posix.date)
+    
+    dates.and.times <- c(dates.and.times, char.date)
+  }
+  
+   if((length(dates) * 24) != length(dates.and.times)){
+     stop("Error!")
+   }
+  
+  ###################
+  
   
   hour.interval <- paste( hour.interval, "hour", sep=" ")
   
-  dates <- seq(as.POSIXct(start, "EST"), as.POSIXct(end, "EST"), by = hour.interval)
-  
-  for (i in 1:length(dates)) {
+  for (i in 1:length(dates.and.times)) {
     control.file <- "CONTROL"
+    
+    date <- as.POSIXct(dates.and.times[i], tz="EST")
     
     # CONTROL FILE extension
     # format: [1-9]+_[1-9]+...
@@ -157,13 +174,11 @@ ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010, start.month = 05,
     # create CONTROL file name
     control.file <- paste(control.file, control.file.extension, sep=".")
     
-    year <- format(dates[i], "%y")
-    Year <- format(dates[i], "%Y") # long format
-    month <- format(dates[i], "%m")
-    day <- format(dates[i], "%d")
-    hour <- format(dates[i], "%H")
-    
-    #print(hour)
+    year <- format(date, "%y")
+    Year <- format(date, "%Y") # long format
+    month <- format(date, "%m")
+    day <- format(date, "%d")
+    hour <- format(date, "%H")
     
     shbang <- "#!/bin/sh"
     
@@ -187,15 +202,15 @@ ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010, start.month = 05,
                 quote = FALSE, append = TRUE)
     
     x <- paste("echo 0", ">>", control.file, "\n",
-              "echo 10000.0 >>", control.file, "\n",
-              "echo 3 >>", control.file, "\n",
-              sep=" ")
+               "echo 10000.0 >>", control.file, "\n",
+               "echo 3 >>", control.file, "\n",
+               sep=" ")
     
     write.table(x, bat.file, col.names = FALSE, row.names = FALSE, 
                 quote = FALSE, append = TRUE)
     
     ## processing always assumes 3 months of met for consistent tdump files
-    months <- as.numeric(unique(format(dates[i], "%m")))
+    months <- as.numeric(unique(format(date, "%m")))
     months <- c(months, months + 1:2)
     months <- months - 1 ## to make sure we get the start of the previous year
     months <- months[months <= 12]
@@ -203,6 +218,8 @@ ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010, start.month = 05,
     if (length(months) == 2) {
       months <- c(min(months) - 1, months)
     }
+    
+    
     
     for (i in 1:3) {
       AddMetFiles(months[i], Year, met, bat.file, control.file)
@@ -218,7 +235,7 @@ ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010, start.month = 05,
     write.table(x, bat.file, col.names = FALSE, row.names = FALSE, 
                 quote = FALSE, append = TRUE)
     
-    x <- paste("/home/thalles/Desktop/hysplit/trunk/exec/hyts_std", 
+    x <- paste( hy.split.exec.dir, 
                control.file.extension, sep=" ")
     
     write.table(x, bat.file, col.names = FALSE, row.names = FALSE, 
@@ -230,16 +247,38 @@ ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010, start.month = 05,
     # create another control file
     control.file.number<-control.file.number+1
   }
+  Sys.sleep(2)
   
   # combine files and make data frame
-  traj <- ReadFiles(hours, hy.path, ID)
+  traj <- ReadFiles(hours, hy.path, ID, dates.and.times)
   
   ## write R object to file
   file.name <- paste(out, name, Year, ".RData", sep = "")
   save(traj, file = file.name)
   
-  #print("Files generated: ")
-  #print(length(dates))
+  
+  # remove existing "tdump" files
+  path.files <- paste0(hy.path, "working/")
+  
+  
+  files <- list.files(path = path.files, pattern = paste("tdump_", ID, sep=""))
+  lapply(files, function(x) file.remove(x))
+  
+  # remove existing CONTROL. and MESSAGE files
+  files <- list.files(path = path.files, pattern = paste("CONTROL.", ID, sep=""))
+  lapply(files, function(x) file.remove(x))
+  
+  files <- list.files(path = path.files, pattern = paste("MESSAGE.", ID, sep=""))
+  lapply(files, function(x) file.remove(x))
+  
+  files <- list.files(path = path.files, pattern = paste("Rcombined_", ID, sep=""))
+  lapply(files, function(x) file.remove(x))
+  
+  # Delete all the script files
+  files <- list.files(path = path.files, 
+                      pattern = paste(script.name, "_", ID, sep=""))
+  
+  lapply(files, function(x) file.remove(x))
 }
 
 
