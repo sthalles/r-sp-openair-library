@@ -18,13 +18,16 @@ ReadFiles <- function(hours = 96, hy.path, ID, dates)
   combine.file.name <- paste("Rcombined_", ID, ".txt", sep="")
   dump.file.name <- paste("tdump_", ID, "_", "*", sep="")
   
+  path.files <- paste0(hy.path, "working/")
   # find tdump files
-  files <- Sys.glob(dump.file.name)
+  files <- list.files(path = path.files, pattern = paste("tdump_", ID, sep=""))
+  
   output <- file(combine.file.name, 'w')
   
   if(length(dates) != length(files)){
     print(length(dates))
     print(length(files))
+    cleanWD(hy.path, ID)
     stop("Error! Finalmente te peguei!")
   }
   
@@ -284,26 +287,27 @@ ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010,
 
 # This function will clean up all the files created by the routine ProcTraj
 # the files that will be deleted are: tdump_, CONTROL., and MESSAGE.
-cleanWD <- function(hy.path = "/home/thalles/Desktop/hysplit/trunk/") {
+cleanWD <- function(hy.path = "/home/thalles/Desktop/hysplit/trunk/", ID) {
   # remove existing "tdump" files
   path.files <- paste0(hy.path, "working/")
   
-  files <- list.files(path = path.files, pattern = "tdump_")
+  
+  files <- list.files(path = path.files, pattern = paste("tdump_", ID, sep=""))
   lapply(files, function(x) file.remove(x))
   
   # remove existing CONTROL. and MESSAGE files
-  files <- list.files(path = path.files, pattern = "CONTROL.")
+  files <- list.files(path = path.files, pattern = paste("CONTROL.", ID, sep=""))
   lapply(files, function(x) file.remove(x))
   
-  files <- list.files(path = path.files, pattern = "MESSAGE.")
+  files <- list.files(path = path.files, pattern = paste("MESSAGE.", ID, sep=""))
   lapply(files, function(x) file.remove(x))
   
-  files <- list.files(path = path.files, pattern = "Rcombined_")
+  files <- list.files(path = path.files, pattern = paste("Rcombined_", ID, sep=""))
   lapply(files, function(x) file.remove(x))
   
   # Delete all the script files
   files <- list.files(path = path.files, 
-                      pattern = paste(script.name, "_", sep=""))
+                      pattern = paste(script.name, "_", ID, sep=""))
   
   lapply(files, function(x) file.remove(x))
   
