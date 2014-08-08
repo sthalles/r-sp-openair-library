@@ -93,7 +93,8 @@ ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010,
                      out = "c:/users/david/TrajProc/", 
                      hours = 12, height = 100, 
                      hy.path = "/home/thalles/Desktop/hysplit/trunk/", ID,
-                     dates, hy.split.exec.dir, script.name="test" ) {
+                     dates, hy.split.exec.dir, script.name="test",
+                     add.new.column = F, new.column.name, new.column.value ) {
   
   # This function setsup and executes hysplit. The ProcTraj function is 
   # designed for parallel execution.
@@ -109,7 +110,8 @@ ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010,
   #   hours:
   #   height:
   #   hy.path:
-  #
+  #   dates: vector containg all the dates that will be calculated by hysplit
+  
   # Returns:
   #   It generates an R file with all the trajectories that have been 
   #   calculated by HySplit
@@ -153,7 +155,7 @@ ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010,
   dates.and.times <- c()
   
   for( i in 1:length(dates) ){
-    start.day <- paste(dates[i], "00:00", sep=" ")
+    start.day <- paste(dates[i], "19:00", sep=" ")
     end.day <- paste(dates[i], "23:00", sep=" ")
     
     posix.date <- seq(as.POSIXct(start.day, "EST"), as.POSIXct(end.day, "EST"), by = "1 hour")
@@ -162,8 +164,8 @@ ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010,
     dates.and.times <- c(dates.and.times, char.date)
   }
   
-  if((length(dates) * 24) != length(dates.and.times)){
-    stop("Error!")
+  if((length(dates) * 5) != length(dates.and.times)){
+    stop("Error! Aqui!")
   }
   
   ###################
@@ -254,6 +256,15 @@ ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010,
   
   # combine files and make data frame
   traj <- ReadFiles(hours, path.to.pwd, ID, dates.and.times)
+  
+  # check if add new column was required
+  if (add.new.column == T){
+    if( !missing(new.column.name) & !missing(new.column.value) ){
+      traj[new.column.name] <- new.column.value
+    } else {
+      stop("Parameters 'new.column.name' and 'new.column.value' are not defined.")
+    }
+  }
   
   ## write R object to file
   file.name <- paste(out, name, Year, ".RData", sep = "")

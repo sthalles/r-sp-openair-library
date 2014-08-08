@@ -30,7 +30,7 @@ if( !require("doMC") ) {
 
 # load the Canada's map
 
-# canada <- readOGR("/home/thalles/Desktop","province")
+# 
 
 # source('/home/thalles/OpenAirWD/openAirHySplit.R')
 # 
@@ -95,7 +95,7 @@ Df2SpPoints <- function(traj, crs = NA)
 }
 
 
-Df2SpLinesDF <- function( spLines, df, crs=NA )
+Df2SpLinesDF <- function( spLines, df )
 {
   # This function converts an object of type data frame, calculated by the 
   # function ProcTraj, into an Object of class SpatialLinesDataFrame.
@@ -107,7 +107,7 @@ Df2SpLinesDF <- function( spLines, df, crs=NA )
   #  
   # Results:
   #   Returns an object of class SpatialLinesDataFrame.
-  
+    
   # get the trajectory lenghth
   # all trajectories have the same length
   max.traj.length <- max(abs(df$hour.inc)) + 1
@@ -122,7 +122,7 @@ Df2SpLinesDF <- function( spLines, df, crs=NA )
   # a data.frame with that information
   data.list <- ddply(df, .(ID), function(df){ df[1,] }, .inform=TRUE)
   
-  spLinesDataFrame <- SpatialLinesDataFrame(spLines, data = data.list, proj4string = crs)
+  spLinesDataFrame <- SpatialLinesDataFrame(spLines, data = data.list)
 
   spLinesDataFrame
 }
@@ -215,6 +215,8 @@ Df2SpLines<-function( df, crs )
 
 
 PlotBgMap <- function( traj, ... ) {
+  canada <- readOGR("/home/thalles/Desktop","province")
+  
   # extract the projection from the sp object
   hySplitProj <- CRS(proj4string(traj))
   
