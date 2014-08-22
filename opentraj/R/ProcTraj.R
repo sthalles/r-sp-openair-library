@@ -1,82 +1,5 @@
-####################################################
-####################################################
-####################################################
-
-ReadFiles <- function( working_dir, ID, dates, tz) 
-{
-  combine.file.name <- paste("Rcombined_", ID, ".txt", sep="")
-  dump.file.name <- paste("tdump_", ID, "_", "*", sep="")
-  
-  # find tdump files
-  files <- list.files(path = working_dir, pattern = paste("tdump_", ID, sep=""))
-  
-  output <- file(combine.file.name, 'w')
-  
-  if(length(dates) != length(files)){
-    print(length(dates))
-    print(length(files))
-    # cleanWD(hy.path, ID)
-    stop("Please, make sure that all required meteorological files are available.")
-  }
-  
-  # read through them all, ignoring 1st 7 lines
-  for (i in files){
-    input <- readLines(i)
-    input <- input[-c(1:7)] # delete header
-    writeLines(input, output)
-  }
-  close(output)
-  
-  # read the combined txt file
-  
-  traj <- read.table(file.path(working_dir, combine.file.name), 
-                     header = FALSE)
-  
-  traj <- subset(traj, select = -c(V2, V7, V8))
-  
-  traj <- rename(traj, c(V1 = "receptor", V3 = "year", V4 = "month", V5 = "day",
-                         V6 = "hour", V9 = "hour.inc", V10 = "lat", V11 = "lon",
-                         V12 = "height", V13 = "pressure"))
-  
-  # hysplit uses 2-digit years ...
-  year <- traj$year[1]
-  
-  if (year < 50) {
-    traj$year <- traj$year + 2000 
-  } else { 
-    traj$year <- traj$year + 1900
-  }
-  
-  # Setup the Canada, ON timezone
-  traj$date2 <- with(traj, ISOdatetime(year, month, day, hour, min = 0, 
-                                       sec = 0, tz = tz)) 
-  
-  # arrival time
-  traj$date <- traj$date2 - 3600 * traj$hour.inc
-  traj
-}
-
-AddMetFiles <- function(month, Year, met, script.file, control.file) 
-{
-  ## if month is one, need previous year and month = 12
-  if (month == 0) {
-    month <- 12
-    Year <- as.numeric(Year) - 1
-  }
-  
-  if (month < 10) {
-    month <- paste("0", month, sep = "")
-  }
-  
-  ## add first line
-  line <- paste("echo", met, ">>", control.file, sep=" ")
-  cat(line, file = script.file, sep = "\n")
-  
-  line <- paste("echo RP", Year, month, ".gbl >> ", control.file, sep = "")
-  cat(line, file = script.file, sep = "\n")
-}
-
-ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010, 
+ProcTraj <- 
+  function(lat = 51.5, lon = -0.1, year = 2010, 
                      hour.interval = 1, name = "london",
                      start.hour = "00:00", end.hour="23:00",
                      met, 
@@ -163,7 +86,7 @@ ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010,
   # link all ASC files from the bdyfiles/ directory to the process working directory
   # this spep is requered in order to run hysplit
   bdyfiles.path <- file.path(hy.path, "bdyfiles")
-    
+  
   symb.link.files <- list.files(path = bdyfiles.path)
   
   for( i in 1:length(symb.link.files) ){
@@ -182,25 +105,25 @@ ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010,
   # insure that each HySplit process will create an individual script file
   # which allows parallel processing 
   script.name <- paste(script.name, "_", ID, script.extension, sep="")
-
+  
   ###################
   # process the dates
   dates.and.times <- 
-                laply( .data = dates, 
-                   .fun=function(d) { 
-                     start.day <- paste(d, start.hour, sep=" ")
-                     end.day <- paste(d, end.hour, sep=" ")
-                     
-                     posix.date <- seq(as.POSIXct(start.day, tz), as.POSIXct(end.day, tz), by = paste(hour.interval, "hour", sep=" "))
-                     
-                     as.character(posix.date)
-                   })
-
+    laply( .data = dates, 
+           .fun=function(d) { 
+             start.day <- paste(d, start.hour, sep=" ")
+             end.day <- paste(d, end.hour, sep=" ")
+             
+             posix.date <- seq(as.POSIXct(start.day, tz), as.POSIXct(end.day, tz), by = paste(hour.interval, "hour", sep=" "))
+             
+             as.character(posix.date)
+           })
+  
   
   ###################
   hour.interval <- paste( hour.interval, "hour", sep=" ")
   
-   
+  
   for (i in 1:length(dates.and.times)) {
     control.file <- "CONTROL"
     
@@ -286,7 +209,7 @@ ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010,
     
     # create another control file
     control.file.number <- control.file.number + 1
-  
+    
   }
   
   # combine files and make data frame
@@ -311,7 +234,7 @@ ProcTraj <- function(lat = 51.5, lon = -0.1, year = 2010,
   
   # sets the working directory back in order to delete the process folders
   setwd(hy.split.wd)
-
+  
   # remove existing "tdump" files 
   if(clean.files == T){
     unlink(folder.name, recursive = TRUE)

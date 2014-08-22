@@ -1,115 +1,81 @@
-if( !require("openair") ) { 
-  install.packages("openair") 
-  library("openair")
-}
+# if( !require("openair") ) { 
+#   install.packages("openair") 
+#   library("openair")
+# }
+# 
+# if( !require("rgdal") ) { 
+#   install.packages("rgdal")
+#   library("rgdal")
+# }
+# 
+# if( !require("sp") ) { 
+#   install.packages("sp")
+#   library("sp")
+# }
+# 
+# if( !require("raster") ) { 
+#   install.packages("raster")
+#   library("raster")
+# }
+# 
+# if( !require("plyr") ) { 
+#   install.packages("plyr")
+#   library("plyr")
+# }
 
-if( !require("rgdal") ) { 
-  install.packages("rgdal")
-  library("rgdal")
-}
-
-if( !require("sp") ) { 
-  install.packages("sp")
-  library("sp")
-}
-
-if( !require("raster") ) { 
-  install.packages("raster")
-  library("raster")
-}
-
-if( !require("plyr") ) { 
-  install.packages("plyr")
-  library("plyr")
-}
-
-if( !require("doMC") ) { 
-  install.packages("doMC")
-  library("doMC")
-}
-
-# load the Canada's map
-
-# 
-
-# source('/home/thalles/OpenAirWD/openAirHySplit.R')
-# 
-# ########################
-# output = "pheno2012"
-# 
-# rimouski_N<-"48d27'N"
-# rimouski_W<-"68d32'W"
-# 
-# rimouski_north <- char2dms(rimouski_N)
-# rimouski_west <- char2dms(rimouski_W)
-# 
-# rimouski_decimal_coords <- c(as(rimouski_north, "numeric"), as(rimouski_west, "numeric"))
-# 
-# procTraj(lat = rimouski_decimal_coords[1], lon = rimouski_decimal_coords[2], year = 2013, name = output,
-#          start.month=07, start.day=15, end.month=07, end.day=17, hour.interval="1 hour",
-#          met = "/home/thalles/Desktop/hysplit/trunk/working/met2013/", out = "/home/thalles/OpenAirWD/", 
-#          hours = 3, height = 100, hy.path = "/home/thalles/Desktop/hysplit/trunk/") 
-# 
-# 
-# traj2013 <- importTraj(site = output, year = 2013, local="~/OpenAirWD/")
-# 
-# 
-# crs<-CRS("+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0")
-# t<-hySplit2SPDF(traj2013, crs)
-# 
-# 
-# spLines<-DF2SpLines(traj2013, crs) # create a SpatialLines object
-# spLinesDF<-DF2SLDF(spLines, traj2013, crs) # create a SpatialLinesDataFrame object
-# 
-# PlotTraj(spLines, crs, axes=TRUE)
-# PlotTrajFreq(spLinesDF, 20, 20, crs)
-# 
-# spplot(sp.lines, spLines)
+# Df2SpPoints <- function(traj, crs = NA)
+# {
+#   # This function converts an object of class data frame, calculated by the 
+#   # function ProcTraj, into an object of class SpatialPoints.
+#   #
+#   # Args:
+#   #   df: Data Frame Object created by the function ProcTraj.
+#   #   crs: Object of class."CRS"; holding a valid proj4 string.
+#   #
+#   # Results:
+#   #   The SpatialPointsDataFrame object  
+#   lapply(c("sp"), require, character.only = TRUE)
+#   
+#   if( !is.na(crs) ){
+#     crs <- CRS(crs)
+#   }
+#   
+#   # get the coordinates out of the data.frame
+#   cc <- traj[7:8]
+#   
+#   # reverse the order of the columns from [Lat Long] to [Long Lat]
+#   cc <- cc[,c(2,1)]
+#   
+#   # get all the data (except) the coordinates
+#   df <- traj[-7:-8]
+#   
+#   # create a SpatialPointsDataFrame object
+#   sp.lines.df <- SpatialPointsDataFrame(coords = cc, data = df, proj4string = crs)
+#   
+#   sp.lines.df
+# }
 
 
-Df2SpPoints <- function(traj, crs = NA)
+Df2SpLinesDf <- function( spLines, df, add.distance=F, add.azimuth=F )
 {
-  # This function converts an object of class data frame, calculated by the 
-  # function ProcTraj, into an object of class SpatialPoints.
-  #
-  # Args:
-  #   df: Data Frame Object created by the function ProcTraj.
-  #   crs: Object of class."CRS"; holding a valid proj4 string.
-  #
-  # Results:
-  #   The SpatialPointsDataFrame object  
-  
-  # get the coordinates out of the data.frame
-  cc <- traj[7:8]
-  
-  # reverse the order of the columns from [Lat Long] to [Long Lat]
-  cc <- cc[,c(2,1)]
-  
-  # get all the data (except) the coordinates
-  df <- traj[-7:-8]
-  
-  # create a SpatialPointsDataFrame object
-  sp.lines.df <- SpatialPointsDataFrame(coords = cc, data = df, proj4string = crs)
-
-  sp.lines.df
-}
-
-
-Df2SpLinesDF <- function( spLines, df )
-{
-  # This function converts an object of type data frame, calculated by the 
-  # function ProcTraj, into an Object of class SpatialLinesDataFrame.
+  # This function converts an object of class SpatialLines, calculated by the 
+  # function Df2SpLines, into an Object of class SpatialLinesDataFrame.
   #
   # Args:
   #  spLines: Object of class SpatialLines calculated by the function Df2SpLines.
   #  df: Data Frame Object created by the function ProcTraj.
-  #  crs: String: Valid projection string. An example would be crs="+proj=longlat +datum=NAD27".
-  #  
+  #  add.distance: Logical: If True, it will calculate and include the distance in meters between the first and last point for every line.
+  #  add.azimuth: Logical: If True it will calculate and include the azimuth for every line.
+  
   # Results:
   #   Returns an object of class SpatialLinesDataFrame.
-    
+  
   # get the trajectory lenghth
   # all trajectories have the same length
+  
+  # load required packages
+  lapply(c("plyr", "maptools", "sp"), require, character.only = TRUE)
+  
   max.traj.length <- max(abs(df$hour.inc)) + 1
   
   # create a traj ID column to identify each trajctory uniquely 
@@ -122,113 +88,113 @@ Df2SpLinesDF <- function( spLines, df )
   # a data.frame with that information
   data.list <- ddply(df, .(ID), function(df){ df[1,] }, .inform=TRUE)
   
+  if(add.distance == T){
+    CalcDistance <- function( line ){ 
+      # get the coordinates of the point
+      cc <- as.data.frame(coordinates(line))
+      
+      # get the first and last pair of coordinates
+      cc <- cc[-c(2,3),]
+      
+      # calculate the distance between those two points
+      dist <- spDists(as.matrix(cc), longlat=TRUE)[1,2]
+    }
+    
+    data.list$distance <- sapply(slot(spLines, "lines"), FUN=CalcDistance)
+    data.list$distance <- data.list$distance * 1000
+  }
+  
+  if(add.azimuth==T){
+    CalcAzimuth <- function( line ){ 
+      # get the coordinates of the point
+      cc <- as.data.frame(coordinates(line))
+      
+      # get the first and last pair of coordinates
+      first.p <- as.matrix(cc[1,])
+      second.p <-  as.matrix(cc[nrow(cc),])
+      
+      # calculate the distance between those two points
+      gzAzimuth(first.p, second.p)
+    }
+    
+    data.list$azimuth <- sapply(slot(spLines, "lines"), FUN=CalcAzimuth)
+  }
+  
   spLinesDataFrame <- SpatialLinesDataFrame(spLines, data = data.list)
-
+  
   spLinesDataFrame
 }
 
 
+Df2SpLines <-
+  function( df, crs=NA )
+  {   
+    # This function converts an object of type data frame, calculated by the function
+    # ProcTraj, into an object of type Spatial Lines.
+    #
+    # Args:
+    #   df: Data Frame Object created by the function ProcTraj.
+    #   crs: String: Valid projection string. An example would be crs= "+proj=longlat +datum=NAD27"
+    #
+    # Results:
+    #  Returns an object of class SpatialLines.
+    
+    # load required packages
+    lapply(c("plyr", "sp"), require, character.only = TRUE)
+    
+    if( !is.na(crs) ){
+      crs <- CRS(crs)
+    }
+    
+    max.traj.length <- max(abs(df$hour.inc)) + 1
+    
+    if(nrow(df) %% max.traj.length != 0) {
+      stop("The number of rows in the 'df' argument is not a multiple of the length of an individual trajectory" )
+    }
+    
+    # create a traj ID column to identify each trajctory uniquely 
+    df$ID <- rep(1:(nrow(df) / max.traj.length), each=max.traj.length )
+    
+    CreateLines <- function(df) {
+      # get the coordinates out of the data.frame
+      cc <- df[7:8]
+      
+      # reverse the order of the columns from [Lat Long] to [Long Lat]
+      cc <- cc[, c(2, 1)]
+      
+      # create a individual line
+      line <- Line(cc)
+      
+      # transfor the line [line] into a Lines object and assign a unique ID
+      Lines(line, ID=as.character(df$ID[1]))  
+    }
+    
+    lines.list <- dlply( df, .(ID), CreateLines)
+    
+    sp.lines <- SpatialLines(lines.list, proj4string = crs)
+    
+    sp.lines
+  }
 
-Df2SpLines<-function( df, crs )
-{   
-  # This function converts an object of type data frame, calculated by the function
-  # ProcTraj, into an object of type Spatial Lines.
-  #
-  # Args:
-  #   df: Data Frame Object created by the function ProcTraj.
-  #   crs: String: Valid projection string. An example would be crs= "+proj=longlat +datum=NAD27"
-  #
-  # Results:
-  #  Returns an object of class SpatialLines.
-  #
-  #     # list to hold elements of type Lines
-  #     lines.list<-list()
-  #     
-  #     # make a group variable
-  #     # get the length of the trajectories
-  #     # all trajectories has the same length
-  #     max.traj.length<-max(abs(df$hour.inc)) + 1
-  #     
-  #     # create a traj ID column to identify each trajctory uniquely 
-  #     df$ID<-rep(1:(nrow(df)/max.traj.length), each=max.traj.length )
-  # 
-  #     # split the dataframe's elements based of its ID
-  #     # each trajectory has its own ID
-  #     list.df<-split(df, df$ID)  
-  #     
-  #     start.time<-Sys.time()
-  #     
-  #     lines.list<-foreach( l=list.df, .combine='c', .packages="sp" ) %dopar% 
-  #     {
-  #         # get the coordinates out of the data.frame
-  #         cc <- l[7:8]
-  #         
-  #         # reverse the order of the columns from [Lat Long] to [Long Lat]
-  #         cc<-cc[,c(2,1)]
-  #         
-  #         # create a individual line
-  #         line<-Line(cc)
-  #         
-  #         # transfor the line [line] into a Lines object and assign an unique ID
-  #         Lines(line, ID=as.character(l$ID[1]))  
-  #     }
-  #     
-  #     end.time<-Sys.time()
-  #     time.taken<-end.time - start.time 
-  #     time.taken
-  
-  start.time <- Sys.time()
-  
-  max.traj.length <- max(abs(df$hour.inc)) + 1
-  
-  if(nrow(df) %% max.traj.length != 0) {
-    stop("The number of rows in the 'df' argument is not a multiple of the length of a individual trajectory" )
-  }
-  
-  # create a traj ID column to identify each trajctory uniquely 
-  df$ID <- rep(1:(nrow(df) / max.traj.length), each=max.traj.length )
-  
-  CreateLines <- function(df) {
-    # get the coordinates out of the data.frame
-    cc <- df[7:8]
-    
-    # reverse the order of the columns from [Lat Long] to [Long Lat]
-    cc <- cc[, c(2, 1)]
-    
-    # create a individual line
-    line <- Line(cc)
-    
-    # transfor the line [line] into a Lines object and assign a unique ID
-    Lines(line, ID=as.character(df$ID[1]))  
-  }
-  
-  lines.list <- dlply( df, .(ID), CreateLines)
-  
-  sp.lines <- SpatialLines(lines.list, proj4string = crs)
-  
-  end.time <- Sys.time()
-  time.taken <- end.time - start.time 
-  time.taken
-  
-  sp.lines
-}
 
 
 PlotBgMap <- function( traj, ... ) {
-  canada <- readOGR("/home/thalles/Desktop","province")
+  lapply(c("rgdal"), require, character.only = TRUE)
+  
+  data(canada.map)
   
   # extract the projection from the sp object
   hySplitProj <- CRS(proj4string(traj))
   
   # apply the projection to the background map
-  canada <- spTransform(canada,hySplitProj)
+  canada <- spTransform(canada.map, hySplitProj)
   
   # plot the map
-  plot(canada, border="white", col="lightgrey", add=TRUE, ... )
+  plot(canada.map, border="white", col="lightgrey", ... )
 }
 
 PlotTraj <- function( traj, ... ) { 
-  # The function PlotTraj is designed to plot hySplit trajectories calculated 
+  # This function is designed to plot hySplit Forward and Backward trajectories calculated 
   # by the function ProcTraj
   # 
   # Args:
@@ -244,14 +210,11 @@ PlotTraj <- function( traj, ... ) {
   # it reduces the margin's size
   par(mar = c(0,0,0,0) + 2.0)
   
-  # plot an empty plot with the proper axes
-  plot(traj, axes=TRUE, type="n")
-  
   # gets the bounding box of the object
   # this information will help to focus on the trajectory
   bb <- bbox(traj)
   
-  PlotBgMap(traj, xlim=bb[1,], ylim=bb[2,])
+  PlotBgMap(traj, xlim=bb[1,], ylim=bb[2,], axes=TRUE)
   
   # print the grid
   grid(col="white")
@@ -261,13 +224,7 @@ PlotTraj <- function( traj, ... ) {
   
   # get the coordinates from the trajectory
   cc <- coordinates(traj)
-  
-  # get the first coordinate point of the trajectory
-  origin <- cc[[1]][[1]][1,]
-  
-  # plot the trajectory initial point over the trajectory line
-  points(origin[1], origin[2], ...)
-  
+
   box()
   
   # restore the par configuration
@@ -275,21 +232,33 @@ PlotTraj <- function( traj, ... ) {
 }
 
 
-
-
-PlotTrajFreq <- function( traj, resolution=10000, gridX=1, gridY=1, ... )
+PlotTrajFreq <-
+  function( spGridDf, background = T, 
+            overlay = NA, overlay.color = "white", 
+            pdf = F, ... )
 {
-  # Function responsable for ploting trajectory frequencies from SpatialObjects
+  # This function is designed to display trajectory frequency map output by
+  # the function RasterizeTraj.
+  # Since the function RasterizeTraj outputs a RasterLayer object, this Object
+  # must be converted to SpatialGridDataDataFrame Object using the 
+  # as( rasterObject, "SpatialGridDataFrame" ) for example.
   #
   # Args:
-  #   traj: Data frame calculated by the ProcTraj function
-  #   resolution:
-  # 
-  #
+  #   spGridDf: SpatialGridDataFrame Object obtened by the convertion of the 
+  #             raster Object output by the RasterizeTraj function.
+  #   background: Boolean: Indicates whether or not the Canada background map 
+  #               should be displayed.
+  #   overlay: SpatialPolygonsDataFrame
+  #   overlay.color: String. sets the Poligons' color defined by the overlay
+  #                  argument e.g. "blue"
+  #   pdf: Boolean. Defined whether or not the output map should be saved 
+  #                 in a pdf file
   # Results:
-  #   It plots a map of trajectory frequencies
-  #
-  pdf("test.pdf")
+  #   Chart   
+  
+  if (pdf == T){
+    pdf(title.name, paper="USr", height=0, width=0)
+  }
   
   #get the old par configuration
   oldpar <- par(no.readonly=TRUE)
@@ -297,59 +266,72 @@ PlotTrajFreq <- function( traj, resolution=10000, gridX=1, gridY=1, ... )
   # it reduces the margin's size
   par(mar=c(0,0,0,0) + 2.0)
   
-  # gets the bounding box of the object
-  # this information will help to focus on the trajectory
-  bb <- bbox(traj)
+  plot.add <- F
   
-  # create raster object
-  rast <- raster(ncols=gridX, nrows=gridY)
+  # get all extra arguments
+  extra.args <- list(...)
   
-  extent(rast) <- extent(traj) # assigns the min and max latitude and longitude
+  # if the argument main was not defined
+  if (!"main" %in% names(extra.args)) {
+    extra.args$main <- NULL
+  }
   
-  # set all the grids to NA
-  rast <- setValues(rast, NA)
+  if(background == T){
+    
+    bb <- bbox(spGridDf)
+    
+    PlotBgMap(spGridDf, xlim=bb[1,], ylim=bb[2,], axes=TRUE)
+    
+    # print the grid
+    grid(col="white")
+    
+    plot.add <- T
+  }
   
-  crs1 <- "+proj=aea +lat_1=46 +lat_2=60 +lat_0=44 +lon_0=-68.5 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
-  rast <- projectRaster(rast,crs=crs1,res=resolution)
+  #spplot(r1, add=T)
   
-  # get the projection from the sp object
-  crs2 <- proj4string(traj)
+  grays <- colorRampPalette(c( "light green", "green", "greenyellow", "yellow", "orange", "orangered", "red"))(10)
+  image( spGridDf, col=grays, breaks=(c(0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0)), add = plot.add)
   
-  # Reproject
-  rast <- projectRaster(rast,crs=crs2)
+  legend("topleft", legend=c("0.0 - 0.1", 
+                             "0.1 - 0.2",
+                             "0.2 - 0.3",
+                             "0.3 - 0.4",
+                             "0.4 - 0.5",
+                             "0.5 - 0.6",
+                             "0.6 - 0.7",
+                             "0.7 - 0.8",
+                             "0.8 - 0.9",
+                             "0.9 - 1.0")
+         , fill = grays)
   
-  # And then ... rasterize it! This creates a grid version 
-  # of your points using the cells of rast, values from the IP field:
-  rast2 <- rasterize(spLines, rast,  fun='count') 
+  do.call(title, extra.args)
   
-  # plots only the box 
-  plot(rast2, legend=FALSE, alpha=0, 
-       col=colorRampPalette(c("light green", "yellow", "orange", "red"))(100) )
-  
-  # plot the map on the background
-  PlotBgMap(traj, xlim=bb[1,], ylim=bb[2,])
-  
-  #bb<-bbox(traj)
-  #PlotBgMap(traj, xlim=bb[1,], ylim=bb[2,], CRS("+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"))
-  plot(rast2, legend=TRUE, col=colorRampPalette(c("light green", "yellow", "orange", "red"))(100), alpha=0.8, axes=TRUE, add=TRUE) ## (n))
+  if(!missing(overlay)){
+    plot(overlay, add = T, col="black", border="black")
+  }
   
   # restore the par configuration
   par(oldpar)
   
-  dev.off()
+  if(pdf == T){
+    dev.off()
+  }
 }
 
-SplitSpLines <- function( sp.lines, into ) {
-  # This function divides the data in the object of class SpatialLines into
-  # groups defined by into. 
-  # 
+SplitSpLines <-
+function( sp.lines, into ) {
+  # This function divides the sp.lines object into [into] sub sets of Spatial Lines
+  # Objects
+  #
   # Args:
-  #   sp.lines: An SpLines Object with more than one line.
-  #   into: An integer value. into must be less than or equal to  
-  #         the length of the sp.lines object.
+  #   sp.lines: Object of class SpatialLines calculated by the function Df2SpLines.
+  #   into: Number of times that the sp.lines object must be divided
   #   
   # Returns:
-  #   A list containing into Spatial Lines Objects
+  #   A list of size [into] containing Spatial Lines Objects
+  lapply(c("sp"), require, character.only = TRUE)
+  
   size <- length(sp.lines)
   
   if (size <= 1)
@@ -378,73 +360,89 @@ SplitSpLines <- function( sp.lines, into ) {
   sp.list
 }
 
-
-RasterizeTraj <- function(list.splines, reduce = T) {
-  # This function produces a RasterLayer object with the trajectories' frequency
-  # 
-  # Args:
-  #   list.splines: A list of SpatialLines objects.
-  #   reduce: boolean: Indicates whether or not the processes must be done
-  #   in parallel
-  #
-  # Returns:
-  #   An obejct of class RasterLayer
-  getRasterGrid <- function(sp.lines, xmn=-80, xmx=-61, 
-                            ymn=44, ymx=52, ncols=40,
-                            nrows=40, resolution=10000)
-  {
-    # create raster object
-    rast <- raster(xmn = xmn, 
-                   xmx = xmx, 
-                   ymn = ymn, 
-                   ymx = ymx, 
-                   ncols = ncols, 
-                   nrows = nrows)
+RasterizeTraj <-
+  function(spLines, resolution=10000, reduce = T) {
+    # This function produces a grid over an specified area and then computes the 
+    # frequency of lines that cross the grid cells. 
+    # 
+    # Args:
+    #   spLines: An object of class Spatial Lines created by the function Df2SpLines
+    #   reduce: Boolean: If TRUE the result will be reduced to one raster object
+    #           if FALSE, this function will return a list of raster Layers. The size of 
+    #           the list is equal to the number of available cores in the system
+    #   
+    # Returns:
+    #   An obejct of class RasterLayer
     
+    lapply(c("raster"), require, character.only = TRUE)
     
-    # set all the grids to NA
-    rast <- setValues(rast, NA)
+    # get the bounding box of the spLines object
+    ext <- extent(spLines)
     
-    crs1 <- "+proj=aea +lat_1=46 +lat_2=60 +lat_0=44 +lon_0=-68.5 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
-    rast <- projectRaster(rast, crs = crs1, res = resolution)
+    # split the sp lines object into N set of lines
+    # where N is the number of cores available
+    cores <- detectCores()
     
-    # get the projection from the sp object
-    crs2 <- proj4string(sp.lines)
+    list.splines <- SplitSpLines( spLines, cores )
     
-    # Reproject
-    rast <- projectRaster(rast, crs = crs2)
+    getRasterGrid <- function(sp.lines, xmn, xmx, 
+                              ymn, ymx, ncols=40,
+                              nrows=40, resolution=10000, ext=ext)
+    {
+      # create raster object
+      rast <- raster(xmn = xmn, 
+                     xmx = xmx, 
+                     ymn = ymn, 
+                     ymx = ymx, 
+                     ncols = ncols, 
+                     nrows = nrows)
+      
+      
+      # set all the grids to NA
+      rast <- setValues(rast, NA)
+      
+      crs1 <- "+proj=aea +lat_1=46 +lat_2=60 +lat_0=44 +lon_0=-68.5 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
+      rast <- projectRaster(rast, crs = crs1, res = resolution)
+      
+      # get the projection from the sp object
+      crs2 <- proj4string(sp.lines)
+      
+      # Reproject
+      rast <- projectRaster(rast, crs = crs2)
+      
+      rast
+    }
     
-    rast
-  }
-  
-  # get the number of phisical cores availables
-  cores<-detectCores()
-  
-  cl <- makeCluster(cores)
-  
-  registerDoParallel(cl)
-  
-  rast2 <- foreach(i=list.splines, .combine='c', .packages="raster") %dopar%
-  {
-    # And then ... rasterize it! This creates a grid version 
-    # of your points using the cells of rast, values from the IP field:
-    rast <- getRasterGrid(i)
+    # get the number of phisical cores availables
+    cores<-detectCores()
     
-    rasterize(i, rast, fun='count', background=0) 
-  }
-
-  stopCluster(cl)
-  
-  if(reduce == T){
-    rast2 <- Reduce("+", rast2)
+    cl <- makeCluster(cores)
     
-    # replace all 0 values per NA
-    rast2[rast2==0] <- NA
+    registerDoParallel(cl)
     
-  }
-  rast2
+    rast2 <- foreach(i=list.splines, .combine='c', .packages="raster") %dopar%
+    {
+      # And then ... rasterize it! This creates a grid version 
+      # of your points using the cells of rast, values from the IP field:
+      rast <- getRasterGrid(i, 
+                            xmn=xmin(ext),
+                            xmx = xmax(ext),
+                            ymn = ymin(ext),
+                            ymx = ymax(ext),
+                            resolution=resolution)
+      
+      rasterize(i, rast, fun='count', background=0) 
+    }
+    
+    stopCluster(cl)
+    
+    if(reduce == T){
+      rast2 <- Reduce("+", rast2)
+      
+      # replace all 0 values per NA
+      rast2[rast2==0] <- NA
+      
+    }
+    rast2
 
 }
-
-
-
