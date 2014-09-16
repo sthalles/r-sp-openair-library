@@ -1,0 +1,19 @@
+AddMetFiles             Add meteorological file path
+Df2SpLines              Data Frame to Spatial Lines
+Df2SpLinesDf            Data Frame to Spatial Lines Data Frame
+PlotBgMap               Plot Background Map
+PlotTraj                Plot Trajectory
+PlotTrajFreq            Plot Trajectory Frequency
+ProcTraj                Process Trajectory
+RasterizeTraj           Rasterize Trajectory
+ReadFiles               Read Files
+SplitSpLines            Split Spatial Lines
+hy.traj2007             HySplit trajectory's calculations
+hytraj07.lines          HYSPLIT Trajectory Lines
+hytraj07.linesDf        HYSPLIT Trajectory Lines Data Frame
+opentraj-package        Functions to create and analyse air trajectory
+                        data.
+ph07.traj.freq          Pheno 2007 trajectory frequency calculation
+pheno2007               Phenology of eastern spruce budworm adult
+                        emergence in Quebec in 2007.
+worldmap                World's Map

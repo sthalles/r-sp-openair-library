@@ -5,25 +5,25 @@ library("doParallel")
 
 setwd("/home/thalles/Music")
 
-source("OpenairSPfunctions.R")
+# source("OpenairSPfunctions.R")
 
 ########################
 # SETUP VARIABLES
-kYear <- 2013
+kYear <- 2007
 KHeight <- 100
-KMetFiles <- "/home/thalles/Desktop/hysplit/trunk/metfiles/met2013/"
-KOutFiles <- paste("/home/thalles/OpenAirWD/pheno2013/", KHeight, "M/", sep="")
-KPheno <- "/home/thalles/Documents/Pheno2013.csv"
+KMetFiles <- "/home/thalles/Desktop/hysplit/trunk/metfiles/met2007/"
+KOutFiles <- paste("/home/thalles/OpenAirWD/pheno2007/", KHeight, "M/", sep="")
+# KPheno <- "/home/thalles/Documents/pheno2007.csv"
 KHySplitPath <- "/home/thalles/Desktop/hysplit/trunk/"
 
 # load the defoliation point file
-data(pheno2013)
+data(pheno2007)
 
 # convert the dates to objects of class Date
-pheno2013$Year.Month.Day <-as.Date(pheno2013$Year.Month.Day)
+pheno2007$Year.Month.Day <-as.Date(pheno2007$Year.Month.Day)
 
 # subset the data, in order to get only the points with ID = 1
-pointsDf<-split(pheno2013, pheno2013$ID)
+pointsDf<-split(pheno2007, pheno2007$ID)
 
 # get the number of phisical cores availables
 cores <- detectCores()
@@ -34,7 +34,7 @@ registerDoParallel(cl)
 
 start.time<-Sys.time()
 
-traj <- foreach(i=1:length(pointsDf), .packages="opentraj") %dopar% 
+hy.traj2007 <- foreach(i=1:length(pointsDf), .packages="opentraj", .combine = rbind) %dopar% 
 {
   points <- pointsDf[[i]]
   
@@ -53,7 +53,7 @@ traj <- foreach(i=1:length(pointsDf), .packages="opentraj") %dopar%
            met = KMetFiles, out = KOutFiles, 
            hours = 3, height = KHeight, hy.path = KHySplitPath, ID = i, dates=dates,
            start.hour = "19:00", end.hour="23:00",
-           tz="EST", clean.files=F) 
+           tz="EST", clean.files=T) 
 }
 
 end.time<-Sys.time()
@@ -61,6 +61,13 @@ time.taken<-end.time - start.time
 time.taken
 
 stopCluster(cl)
+
+crs <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
+
+hytraj07.lines <- Df2SpLines(hy.traj2007, crs)
+
+hytraj07.linesDf <- Df2SpLinesDf(hytraj07.lines, hy.traj2007)
+
 
 ###################################
 
@@ -104,7 +111,7 @@ time.taken
 
 stopCluster(cl)
 
-# if((nrow(pheno2013) * 24 * 4) == nrow(data.frame)){
+# if((nrow(pheno2007) * 24 * 4) == nrow(data.frame)){
 #   print("OK")
 # }else{
 #   print("Error!")
@@ -117,9 +124,7 @@ stopCluster(cl)
 
 crs <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
 
-print("Creating SpatialLines Object")
-
-spLines <- Df2SpLines(data.frame, crs)
+hytraj07.lines <- Df2SpLines(hy.traj2007, crs)
 
 PlotTraj(spLines)
 
@@ -338,7 +343,9 @@ r <- raster("/home/thalles/Desktop/r-sp-openair-library/pheno2009_100M.tif")
 
 #def <- spTransform(def,CRS(crs))
 
-r <- RasterizeTraj(spLines, reduce=T, resolution=10000)
+data(hytraj07.lines)
+
+r <- RasterizeTraj(hytraj07.lines, reduce=T, resolution=10000)
 
 r.max.value <- maxValue(r)
 
@@ -354,3 +361,13 @@ r1 <- as(r, "SpatialGridDataFrame")
 PlotTrajFreq(r1, background = TRUE, overlay.color = "white", main="Title", pdf=F)
 
 #####################################
+
+
+data(hytraj07.linesDf)
+
+data <- slot(hytraj07.linesDf, 'data')
+
+subset(data, day==23 & hour==19)
+
+SelectByDate <- function( sp.lines.df, year, month, day, hour)
+
