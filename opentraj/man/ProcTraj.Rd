@@ -80,13 +80,19 @@ The ProcTraj function is responsible for all setup and execution of the HySplit 
     String: Name of the script file that will run HySplit, Default value: "script"
 }
   \item{add.new.column}{
-    Boolean;
+    Boolean: If true it specifies that one or more columns will be added to the
+    output data frame. If this argument is set as TRUE, the arguments [new.column.name]
+    and new.column.value has to be defined.
 }
   \item{new.column.name}{
-    String:
+    Vector or Single value which defines the data frame new column names to be added.
+    If a vector is passed as input, then, each value of the vector corresponds 
+    to a new column name of the data frame.
 }
   \item{new.column.value}{
-    Any Value
+    Vector or Single value which defines the data frame column values to be added.
+    If a vector is passed as input, then, each value of the vector will be the value 
+    for a new column of the data frame.
 }
   \item{tz}{
     String: This argument specifies the Time Zone to be applied, e.g. "GMT"

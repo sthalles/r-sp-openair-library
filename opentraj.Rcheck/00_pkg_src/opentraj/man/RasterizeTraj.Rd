@@ -9,7 +9,7 @@ This function produces a grid over an specified area and then computes the
 frequency of lines that cross each cells' grid. 
 }
 \usage{
-  RasterizeTraj(spLines, resolution=10000, reduce=TRUE )
+  RasterizeTraj(spLines, resolution=10000, reduce=TRUE, parallel=FALSE )
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -26,6 +26,9 @@ frequency of lines that cross each cells' grid.
   Boolean: If TRUE the result will be reduced to one raster object; if FALSE, 
   this function will return a list of RasterLayer. The size of 
   the list is equal to the number of available cores in the system.
+  }
+  \item{parallel}{
+    Boolean: If TRUE, the rasterize process will be made in parallel.
   }
 }
 \details{
@@ -46,8 +49,9 @@ frequency of lines that cross each cells' grid.
   \code{\link{SplitSpLines}}, \code{\link{raster}}.
 }
 \examples{  
-  ## Copy, paste, and RUN
-  ## r <- RasterizeTraj(hytraj07.lines, reduce=TRUE, resolution=10000)
+ crs <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
+ air.traj.lines <- Df2SpLines(air.traj, crs)
+ raster.lines <- RasterizeTraj(air.traj.lines, reduce=TRUE, resolution=10000, parallel=FALSE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

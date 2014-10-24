@@ -1,5 +1,6 @@
 opentraj-package	opentraj-package
 AddMetFiles	AddMetFiles
+air.traj	air.traj
 Df2SpLines	Df2SpLines
 Df2SpLinesDf	Df2SpLinesDf
 hy.traj2007	hy.traj2007

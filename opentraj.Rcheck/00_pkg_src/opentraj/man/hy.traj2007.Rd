@@ -13,14 +13,14 @@
   A data frame with 111100 observations on the following 12 variables.
   \describe{
     \item{\code{receptor}}{a numeric vector; }
-    \item{\code{year}}{a numeric vector; Calculation's year. }
-    \item{\code{month}}{a numeric vector; Calculation's month. }
-    \item{\code{day}}{a numeric vector; Calculation's day. }
-    \item{\code{hour}}{a numeric vector; Calculations: hour. }
-    \item{\code{hour.inc}}{a numeric vector; Trajectory's hour increment, i.g. age of the trajectory in hours.}
-    \item{\code{lat}}{a numeric vector; Trajectory's latitude starting point.}
-    \item{\code{lon}}{a numeric vector; Trajectory's longitude starting point.}
-    \item{\code{height}}{a numeric vector; Level above ground (meters)}
+    \item{\code{year}}{a numeric vector; calculating year. }
+    \item{\code{month}}{a numeric vector; calculating month. }
+    \item{\code{day}}{a numeric vector; calculating day. }
+    \item{\code{hour}}{a numeric vector; calculating hour. }
+    \item{\code{hour.inc}}{a numeric vector; trajectory's hour increment, i.g. age of the trajectory in hours.}
+    \item{\code{lat}}{a numeric vector; trajectory's latitude starting point.}
+    \item{\code{lon}}{a numeric vector; trajectory's longitude starting point.}
+    \item{\code{height}}{a numeric vector; level above ground (meters)}
     \item{\code{pressure}}{a numeric vector; diagnostic output variables }
     \item{\code{date2}}{a POSIXct; Year month day hour minute of the point}
     \item{\code{date}}{a POSIXct; Starting year, month, day, and hour}

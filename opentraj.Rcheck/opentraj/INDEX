@@ -8,6 +8,7 @@ ProcTraj                Process Trajectory
 RasterizeTraj           Rasterize Trajectory
 ReadFiles               Read Files
 SplitSpLines            Split Spatial Lines
+air.traj                HYSPLIT Forward air trajectories.
 hy.traj2007             HySplit trajectory's calculations
 hytraj07.lines          HYSPLIT Trajectory Lines
 hytraj07.linesDf        HYSPLIT Trajectory Lines Data Frame

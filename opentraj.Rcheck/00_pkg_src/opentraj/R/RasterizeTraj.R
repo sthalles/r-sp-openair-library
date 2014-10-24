@@ -1,5 +1,5 @@
 RasterizeTraj <-
-function(spLines, resolution=10000, reduce = TRUE) {
+function(spLines, resolution=10000, reduce = TRUE, parallel=FALSE) {
     # This function produces a grid over an specified area and then computes the 
     # frequency of lines that cross the grid cells. 
     # 
@@ -12,14 +12,6 @@ function(spLines, resolution=10000, reduce = TRUE) {
     # Returns:
     #   An obejct of class RasterLayer
         
-    # get the bounding box of the spLines object
-    ext <- extent(spLines)
-    
-    # split the sp lines object into N set of lines
-    # where N is the number of cores available
-    cores <- detectCores()
-    
-    list.splines <- SplitSpLines( spLines, cores )
     
     getRasterGrid <- function(sp.lines, xmn, xmx, 
                               ymn, ymx, ncols=40,
@@ -49,33 +41,60 @@ function(spLines, resolution=10000, reduce = TRUE) {
       rast
     }
     
-    cl <- makeCluster(cores)
+    # get the bounding box of the spLines object
+    ext <- extent(spLines)
     
-    registerDoParallel(cl)
+    if(parallel == TRUE) {
     
-    rast2 <- foreach(sp.lines = list.splines, .combine='c', .packages="raster") %dopar%
-    {
-      # And then ... rasterize it! This creates a grid version 
-      # of your points using the cells of rast, values from the IP field:
-      rast <- getRasterGrid(sp.lines, 
-                            xmn=xmin(ext),
-                            xmx = xmax(ext),
-                            ymn = ymin(ext),
-                            ymx = ymax(ext),
-                            resolution=resolution)
+      # split the sp lines object into N set of lines
+      # where N is the number of cores available
+      cores <- detectCores()
       
-      rasterize(sp.lines, rast, fun='count', background=0) 
+      list.splines <- SplitSpLines( spLines, cores )
+      
+      cl <- makeCluster(cores)
+      
+      registerDoParallel(cl)
+      
+      rast2 <- foreach(sp.lines = list.splines, .combine='c', .packages="raster") %dopar%
+      {
+        # And then ... rasterize it! This creates a grid version 
+        # of your points using the cells of rast, values from the IP field:
+        rast <- getRasterGrid(sp.lines, 
+                              xmn=xmin(ext),
+                              xmx = xmax(ext),
+                              ymn = ymin(ext),
+                              ymx = ymax(ext),
+                              resolution=resolution)
+        
+        rasterize(sp.lines, rast, fun='count', background=0) 
+      }
+      
+      stopCluster(cl)
+      
+      if(reduce == T){
+        rast2 <- Reduce("+", rast2)
+        
+        # replace all 0 values per NA
+        rast2[rast2==0] <- NA
+        
+      }
+      
+      rast2
+      
+    } else {
+        # And then ... rasterize it! This creates a grid version 
+        # of your points using the cells of rast, values from the IP field:
+        rast <- getRasterGrid(spLines, 
+                              xmn=xmin(ext),
+                              xmx = xmax(ext),
+                              ymn = ymin(ext),
+                              ymx = ymax(ext),
+                              resolution=resolution)
+        
+        rast2 <- rasterize(spLines, rast, fun='count') 
+        
+        rast2
     }
-    
-    stopCluster(cl)
-    
-    if(reduce == T){
-      rast2 <- Reduce("+", rast2)
-      
-      # replace all 0 values per NA
-      rast2[rast2==0] <- NA
-      
-    }
-    rast2
 
 }

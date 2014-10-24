@@ -1,5 +1,5 @@
 ProcTraj <- 
-  function(lat = 51.5, lon = -45.1, year = 2010, 
+  function(lat = 51.5, lon = -45.1,
                      hour.interval = 1, name = "london",
                      start.hour = "00:00", end.hour="23:00",
                      met, 
@@ -16,8 +16,6 @@ ProcTraj <-
   # Args:
   #   lat: Numeric: Initial point's Latitude.
   #   lon: Numeric: Initial point's Longitude.
-  #   year: year: Integer: It specifies the year of the trajectory calculation 
-  #         e.g. 1978. This year must agree with the year of the meteorological data file.
   #   hour.interval: Integer: This value specifies the interval when each trajectory will be calculated.
   #   name: String: Name of the trajectory endpoints file.
   #   start.hour: String: Specifies the START hour of the simulation. An example would be: start.hour = "12:00"

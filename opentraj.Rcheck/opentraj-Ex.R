@@ -30,13 +30,10 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-## load data frame of HYSPLIT trajectory calculations calculated by function ProcTraj
-## Copy and Paste
-## data(hy.traj2007)
-
-## crs <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
-
-## hytraj07.lines <- Df2SpLines(hy.traj2007, crs)
+  ## load data frame of HYSPLIT trajectory calculations calculated by function ProcTraj
+  crs <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
+  air.traj.lines <- Df2SpLines(air.traj, crs)
+  PlotTraj(air.traj.lines)
 
 
 
@@ -56,16 +53,10 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-## load data frame of HYSPLIT trajectory calculations calculated by function ProcTraj
-## Copy and Paste
-
-## data(hy.traj2007)
-
-## crs <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
-
-## hytraj07.lines <- Df2SpLines(hy.traj2007, crs)
-
-## hytraj07.linesDf <- Df2SpLinesDf(hytraj07.lines, hy.traj2007)
+  crs <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
+  air.traj.lines <- Df2SpLines(air.traj, crs)
+  air.traj.linesDf <- Df2SpLinesDf(air.traj.lines, air.traj)
+  PlotTraj(air.traj.linesDf)
 
 
 
@@ -85,11 +76,9 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-## Copy, Paste, and Execute
-
-## data(hytraj07.lines)
-
-## PlotTraj(hytraj07.lines)
+  crs <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
+  air.traj.lines <- Df2SpLines(air.traj, crs)
+  PlotTraj(air.traj.lines)
 
 
 
@@ -109,23 +98,21 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-## Copy, paste and execute
-
-## library(raster)
-## library(rgdal)
-
-## r.max.value <- maxValue(ph07.traj.freq)
-
-## v <- getValues(ph07.traj.freq)
-
-## v <- v / r.max.value
-
-## r <- setValues(ph07.traj.freq, v)
-
-## convert raster object to SparialGridDataFrame Object
-## r1 <- as(r, "SpatialGridDataFrame")
-
-## PlotTrajFreq(r1, background = TRUE, main="Title", pdf=FALSE)
+  library(raster)
+    
+  crs <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
+  air.traj.lines <- Df2SpLines(air.traj, crs)
+  raster.lines <- RasterizeTraj(air.traj.lines, reduce=TRUE, resolution=15000, parallel=FALSE)
+    
+  r.max.value <- maxValue(raster.lines)
+  v <- getValues(raster.lines)
+  v <- v / r.max.value
+  r <- setValues(raster.lines, v)
+    
+  ## convert raster object to SparialGridDataFrame Object
+  r1 <- as(r, "SpatialGridDataFrame")
+    
+  PlotTrajFreq(r1, background = TRUE, main="Title", pdf=FALSE)
 
 
 
@@ -234,8 +221,9 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
   
-  ## Copy, paste, and RUN
-  ## r <- RasterizeTraj(hytraj07.lines, reduce=TRUE, resolution=10000)
+ crs <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
+ air.traj.lines <- Df2SpLines(air.traj, crs)
+ raster.lines <- RasterizeTraj(air.traj.lines, reduce=TRUE, resolution=10000, parallel=FALSE)
 
 
 
@@ -255,17 +243,38 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-## Copy, paste, and execute
-
-## data(hytraj07.lines)
-
 ## split the SpatialLines object in a list with 8 SpatialLines objects
-## lines.list <- SplitSpLines(hytraj07.lines, 8)
+
+crs <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
+air.traj.lines <- Df2SpLines(air.traj, crs)
+
+lines.list <- SplitSpLines(air.traj.lines, 8)
 
 
 
 base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
 base::cat("SplitSpLines", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+cleanEx()
+nameEx("air.traj")
+### * air.traj
+
+flush(stderr()); flush(stdout())
+
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+### Name: air.traj
+### Title: HYSPLIT Forward air trajectories.
+### Aliases: air.traj
+### Keywords: datasets
+
+### ** Examples
+
+  data(air.traj)
+  str(air.traj) 
+
+
+
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("air.traj", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("hy.traj2007")
 ### * hy.traj2007

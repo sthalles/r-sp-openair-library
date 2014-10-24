@@ -1,15 +1,14 @@
 Package: opentraj
 Type: Package
-Title: The opentraj package provides a collection of functions to
-        create and analyze air trajectory data calculated by HYSPLIT.
+Title: Tools for Creating and Analysing Air Trajectory Data
 Version: 1.0
 Date: 2014-08-22
 Author: Thalles Santos Silva
 Maintainer: Thalles Silva <tsantossilva@algomau.ca>
-Description: These functions join the capabilities offered by the openair project along with the classes and methods for spatial data analysis provided by the R sp package to process air trajectory data.
+Description: opentraj uses the Hybrid Single Particle Lagrangian Integrated Trajectory Model (HYSPLIT) for computing simple air parcel trajectories. The functions in this package allow users to run HYSPLIT for trajectory calculations, as well as get its results, directly from R without using any GUI interface.
 License: GPL-2
 Imports: plyr, maptools, openair, raster, rgdal, reshape, doParallel,
         parallel, foreach, sp
 LazyData: yes
-Packaged: 2014-09-16 17:41:20 UTC; thalles
+Packaged: 2014-09-19 13:19:58 UTC; thalles
 Depends: R (>= 2.10)

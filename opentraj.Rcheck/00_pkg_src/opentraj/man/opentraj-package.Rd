@@ -10,7 +10,7 @@ The opentraj project was initially developed at the Natural Resources Canada lab
 
 This package uses the Hybrid Single Particle Lagrangian Integrated Trajectory Model (HYSPLIT) for computing simple air parcel trajectories. The functions offered by this package allow users to run HYSPLIT for trajectory calculations, as well as get its results, directly from R without using any GUI interface.
 
-In addition, because this package bases their data format in the ones used by openair, many of the openair's functions can be used to process these results as well. One of the main advantages of this package, in relation to openair, is the possibility of running either Forward and Backward trajectories. Also, this package uses the methods for spatial data provided by the sp package.
+In addition, because this package bases their data format in the ones used by openair, many of the openair's functions can be used to process these results as well. One of the main advantages of this package, in relation to openair, is the possibility of running either Forward and Backward HYSPLIT trajectories. Also, this package uses methods for spatial data provided by the sp package.
 }
 \details{
 \tabular{ll}{

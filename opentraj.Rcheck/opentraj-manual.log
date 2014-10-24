@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.6.5)  16 SEP 2014 13:45
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.6.5)  19 SEP 2014 09:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -685,14 +685,14 @@ LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10> not available
 (Font)              Font shape `T1/ptm/b/n' tried instead on input line 11.
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <20.74> not available
 (Font)              Font shape `T1/ptm/b/n' tried instead on input line 11.
-LaTeX Font Info:    Try loading font information for T1+zi4 on input line 22.
+LaTeX Font Info:    Try loading font information for T1+zi4 on input line 21.
 
 (/usr/share/texlive/texmf-dist/tex/latex/inconsolata/t1zi4.fd
 File: t1zi4.fd 2013/06/09 T1/zi4 (Inconsolata)
 )
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 30.
-LaTeX Font Info:    Try loading font information for T1+phv on input line 30.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 29.
+LaTeX Font Info:    Try loading font information for T1+phv on input line 29.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1phv.fd
 File: t1phv.fd 2001/06/04 scalable font definitions for T1/phv.
@@ -715,13 +715,13 @@ File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 ) [2]
-Overfull \hbox (15.74736pt too wide) in paragraph at lines 99--100
+Overfull \hbox (15.74736pt too wide) in paragraph at lines 98--99
 \T1/ptm/m/n/10 down-loaded from HYS-PLIT, so that, they have the fol-low-ing na
 me struc-ture: "RP<Year><Month>.gbl".
  []
 
 
-Overfull \hbox (10.70807pt too wide) in paragraph at lines 99--100
+Overfull \hbox (10.70807pt too wide) in paragraph at lines 98--99
 \T1/ptm/m/n/10 For ex-am-ple, for Year = 2007 and Month = 06, the me-te-o-ro-lo
 g-i-cal file name would be: "RP200706.gbl" 
  []
@@ -729,19 +729,7 @@ g-i-cal file name would be: "RP200706.gbl"
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 ) [3]
-(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
-File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
-) [4]
-Overfull \hbox (14.87845pt too wide) in paragraph at lines 169--170
-[]\T1/ptm/m/n/10 This func-tion con-verts an ob-ject of class [][]\T1/zi4/m/n/1
-0 SpatialLines-class[][][]\T1/ptm/m/n/10 , cal-cu-lated by the func-tion [][]\T
-1/zi4/m/n/10 Df2SpLines[][][]\T1/ptm/m/n/10 ,
- []
-
-[5] (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
-File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
-)
-Overfull \hbox (207.84474pt too wide) in paragraph at lines 266--268
+Overfull \hbox (207.84474pt too wide) in paragraph at lines 146--147
 []\T1/ptm/m/n/10 For more in-for-ma-tion re-gard-ing HYS-PLIT tra-jec-tory's en
 d-point data, please re-fer to http://www.arl.noaa.gov/documents/reports/hyspli
 t_user_guide.pdf. 
@@ -749,14 +737,23 @@ t_user_guide.pdf.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
-) [6]
+) [4]
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
-)
-Overfull \hbox (0.41846pt too wide) in paragraph at lines 305--308
-[]\T1/ptm/m/n/10 This ob-ject is an out-put ex-am-ple from the func-tion [][]\T
-1/zi4/m/n/10 Df2SpLinesDf[][][] \T1/ptm/m/n/10 us-ing the ob-ject [][]\T1/zi4/m
-/n/10 hytraj07.lines[][][]
+) [5]
+Overfull \hbox (14.87845pt too wide) in paragraph at lines 212--213
+[]\T1/ptm/m/n/10 This func-tion con-verts an ob-ject of class [][]\T1/zi4/m/n/1
+0 SpatialLines-class[][][]\T1/ptm/m/n/10 , cal-cu-lated by the func-tion [][]\T
+1/zi4/m/n/10 Df2SpLines[][][]\T1/ptm/m/n/10 ,
+ []
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
+) [6]
+Overfull \hbox (207.84474pt too wide) in paragraph at lines 303--305
+[]\T1/ptm/m/n/10 For more in-for-ma-tion re-gard-ing HYS-PLIT tra-jec-tory's en
+d-point data, please re-fer to http://www.arl.noaa.gov/documents/reports/hyspli
+t_user_guide.pdf. 
  []
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
@@ -764,95 +761,122 @@ File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 ) [7]
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
-) [8]
-(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
-File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
-Overfull \hbox (8.63702pt too wide) in paragraph at lines 404--406
-[]\T1/ptm/m/n/10 SpatialLines or Spa-tialLi-nes-DataFrame ob-ject cal-cu-lated 
-by func-tions Df2SpLines
+Overfull \hbox (0.41846pt too wide) in paragraph at lines 342--345
+[]\T1/ptm/m/n/10 This ob-ject is an out-put ex-am-ple from the func-tion [][]\T
+1/zi4/m/n/10 Df2SpLinesDf[][][] \T1/ptm/m/n/10 us-ing the ob-ject [][]\T1/zi4/m
+/n/10 hytraj07.lines[][][]
  []
 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
+) [8]
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 ) [9]
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
-Overfull \hbox (29.92769pt too wide) in paragraph at lines 480--482
+Overfull \hbox (8.63702pt too wide) in paragraph at lines 441--443
+[]\T1/ptm/m/n/10 SpatialLines or Spa-tialLi-nes-DataFrame ob-ject cal-cu-lated 
+by func-tions Df2SpLines
+ []
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
+) [10]
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
+)
+Overfull \hbox (29.92769pt too wide) in paragraph at lines 515--517
 []\T1/ptm/m/n/10 This func-tion is de-signed to dis-play a tra-jec-tory fre-que
 ncy map that was out-put by func-tion [][]\T1/zi4/m/n/10 RasterizeTraj[][][]\T1
 /ptm/m/n/10 . 
  []
 
-[10] [11] (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+[11]
+Overfull \hbox (21.48093pt too wide) in paragraph at lines 578--578
+ []  \T1/zi4/m/n/9 raster.lines <- RasterizeTraj(air.traj.lines, reduce=TRUE, r
+esolution=15000, parallel=FALSE)[] 
+ []
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 ) [12]
-Overfull \hbox (103.80595pt too wide) in paragraph at lines 607--610
+Overfull \hbox (103.80595pt too wide) in paragraph at lines 636--639
 \T1/ptm/m/n/10 ing to me-te-o-ro-log-i-cal files can be found in http://www.met
 eozone.com/home/tutorial/html/meteo_ftp.html. 
  []
 
-[13]
-LaTeX Font Info:    Try loading font information for TS1+zi4 on input line 730.
+[13] [14]
+LaTeX Font Info:    Try loading font information for TS1+zi4 on input line 759.
 
  (/usr/share/texlive/texmf-dist/tex/latex/inconsolata/ts1zi4.fd
 File: ts1zi4.fd 2013/06/07 Fontinst v1.933 font definitions for TS1/zi4.
-) [14]
-(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
-File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
-) [15]
+)
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [15]
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
-Underfull \hbox (badness 10000) in paragraph at lines 853--872
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 853--872
-
+Overfull \hbox (17.88092pt too wide) in paragraph at lines 846--846
+ [] \T1/zi4/m/n/9 raster.lines <- RasterizeTraj(air.traj.lines, reduce=TRUE, re
+solution=10000, parallel=FALSE)[] 
  []
 
 [16] (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
-) [17]
-Overfull \hbox (25.55728pt too wide) in paragraph at lines 913--916
+)
+Underfull \hbox (badness 10000) in paragraph at lines 886--905
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 886--905
+
+ []
+
+[17] (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
+)
+Overfull \hbox (25.55728pt too wide) in paragraph at lines 946--949
 []\T1/ptm/m/n/10 Although this func-tion might be used seper-ately, the Split-S
 pLines func-tion is called by the [][]\T1/zi4/m/n/10 RasterizeTraj[][][]
  []
 
-(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+[18] (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
-) (./Rd2.ind [18]
+) (./Rd2.ind
+[19]
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `T1/ptm/b/n' tried instead on input line 3.
 
 
 LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
-(Font)              using `T1/zi4/m/n' instead on input line 72.
+(Font)              using `T1/zi4/m/n' instead on input line 74.
 
-[19
+[20
 
 ])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 966.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 966.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 999.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 999.
  (./Rd2.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 966.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 966.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 999.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 999.
 Package rerunfilecheck Info: File `Rd2.out' has not changed.
-(rerunfilecheck)             Checksum: 0C110D9BCC166CA78B2500CD932FC91E;981.
+(rerunfilecheck)             Checksum: 45103BEFFAAC5EBA26300ADBFF11007E;1030.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 966.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 999.
  ) 
 Here is how much of TeX's memory you used:
- 6534 strings out of 493304
- 94006 string characters out of 6139872
+ 6545 strings out of 493304
+ 94221 string characters out of 6139872
  171341 words of memory out of 5000000
- 9698 multiletter control sequences out of 15000+600000
+ 9699 multiletter control sequences out of 15000+600000
  40963 words of font info for 50 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  38i,6n,27p,688b,591s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -874,10 +898,10 @@ pe1/urw/helvetic/uhvr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/time
 s/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></
 usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texli
 ve/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on Rd2.pdf (19 pages, 123243 bytes).
+Output written on Rd2.pdf (20 pages, 125101 bytes).
 PDF statistics:
- 511 PDF objects out of 1000 (max. 8388607)
- 478 compressed objects within 5 object streams
- 161 named destinations out of 1000 (max. 500000)
- 145 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 531 PDF objects out of 1000 (max. 8388607)
+ 497 compressed objects within 5 object streams
+ 169 named destinations out of 1000 (max. 500000)
+ 153 words of extra memory for PDF output out of 10000 (max. 10000000)
 
