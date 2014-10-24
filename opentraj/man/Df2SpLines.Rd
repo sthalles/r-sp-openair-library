@@ -17,7 +17,7 @@ Df2SpLines(df, crs=NA)
     \code{\link{data.frame}} Object created by the function \code{\link{ProcTraj}}.
   }
   \item{crs}{
-    String: Valid projection string. An example would be crs="+proj=longlat +datum=NAD27""
+    String: Valid projection string. An example would be crs="+proj=longlat +datum=NAD27"
   }
 }
 \details{
@@ -35,13 +35,10 @@ Thalles Santos Silva
 \code{\link{data.frame}}, \code{\link{ProcTraj}}, \code{\link{SpatialLines-class}}.
 }
 \examples{
-## load data frame of HYSPLIT trajectory calculations calculated by function ProcTraj
-## Copy and Paste
-## data(hy.traj2007)
-
-## crs <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
-
-## hytraj07.lines <- Df2SpLines(hy.traj2007, crs)
+  ## load data frame of HYSPLIT trajectory calculations calculated by function ProcTraj
+  crs <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
+  air.traj.lines <- Df2SpLines(air.traj, crs)
+  PlotTraj(air.traj.lines)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

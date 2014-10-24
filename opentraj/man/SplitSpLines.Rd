@@ -44,12 +44,12 @@ do the process in parallel.
 }
 
 \examples{
-## Copy, paste, and execute
-
-## data(hytraj07.lines)
-
 ## split the SpatialLines object in a list with 8 SpatialLines objects
-## lines.list <- SplitSpLines(hytraj07.lines, 8)
+
+crs <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
+air.traj.lines <- Df2SpLines(air.traj, crs)
+
+lines.list <- SplitSpLines(air.traj.lines, 8)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

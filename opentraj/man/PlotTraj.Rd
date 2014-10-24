@@ -36,11 +36,9 @@ Plot Trajectory
 }
 
 \examples{
-## Copy, Paste, and Execute
-
-## data(hytraj07.lines)
-
-## PlotTraj(hytraj07.lines)
+  crs <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
+  air.traj.lines <- Df2SpLines(air.traj, crs)
+  PlotTraj(air.traj.lines)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

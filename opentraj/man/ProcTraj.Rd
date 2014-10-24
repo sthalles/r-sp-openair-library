@@ -9,7 +9,7 @@ The ProcTraj function is responsible for all setup and execution of the HySplit 
 }
 
 \usage{
-  ProcTraj(lat = 51.5, lon = -45.1, year = 2010, 
+  ProcTraj(lat = 51.5, lon = -45.1,
                      hour.interval = 1, name = "london",
                      start.hour = "00:00", end.hour="23:00",
                      met, 
@@ -27,10 +27,6 @@ The ProcTraj function is responsible for all setup and execution of the HySplit 
 }
   \item{lon}{
     Numeric: Initial point's Longitude.
-}
-  \item{year}{
-    Integer: It specifies the year of the trajectory calculation e.g. 1978. 
-    This year must agree with the year of the meteorological data file.
 }
   \item{hour.interval}{
     Integer: This value specifies the hour interval when each trajectory will be calculated. 

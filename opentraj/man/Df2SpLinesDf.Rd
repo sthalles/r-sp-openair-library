@@ -47,16 +47,10 @@ Thalles Santos Silva
 }
 
 \examples{
-## load data frame of HYSPLIT trajectory calculations calculated by function ProcTraj
-## Copy and Paste
-
-## data(hy.traj2007)
-
-## crs <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
-
-## hytraj07.lines <- Df2SpLines(hy.traj2007, crs)
-
-## hytraj07.linesDf <- Df2SpLinesDf(hytraj07.lines, hy.traj2007)
+  crs <- "+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"
+  air.traj.lines <- Df2SpLines(air.traj, crs)
+  air.traj.linesDf <- Df2SpLinesDf(air.traj.lines, air.traj)
+  PlotTraj(air.traj.linesDf)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
