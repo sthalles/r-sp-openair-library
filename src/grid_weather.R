@@ -1,3 +1,10 @@
+# Once given the map of min and max temperature and precipitation of the entire
+# Canada, and the Polygon representing the defoliation area (Quebic), this code
+# generates a new set of polygons where the areas of defoliation and the max and
+# min temperatures and precipitation for the whole year intersects. In other words, 
+# the output polygon divides the defoliation area in a grid where each cell 
+# contains the max, min temperature and precipitation.
+
 library("opentraj")
 library("sp")
 library("rgdal")
