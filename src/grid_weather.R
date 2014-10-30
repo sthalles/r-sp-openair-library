@@ -1,9 +1,13 @@
-# Once given the map of min and max temperature and precipitation of the entire
-# Canada, and the Polygon representing the defoliation area (Quebic), this code
+# Once given a map of min and max temperature and precipitation of
+# Canada, and the Polygon representing the defoliation areas (Quebec), this code
 # generates a new set of polygons where the areas of defoliation and the max and
 # min temperatures and precipitation for the whole year intersects. In other words, 
 # the output polygon divides the defoliation area in a grid where each cell 
-# contains the max, min temperature and precipitation.
+# contains the max, min temperature and precipitation. At the end, three data frames
+# will be generated and saved. [min.df] contains the grid of defoliation for a
+# whole year where each cell contains the minimun temperature in each point. 
+# Similarly, [max.df] and [pcp.df], contain the grid of defoliation where each
+# cell contains data regarding max temperature and precipitation in each point.
 
 library("opentraj")
 library("sp")
