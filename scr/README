@@ -1,0 +1,4 @@
+This directory represents the original directory created for me to run the code
+in the files grid_weather.R and Pheno_Thalles.R. Please, notice that the directories
+have to be properly populated. The [metfiles] directory for example, has to have
+meteorological data files downloaded from the HySplit ftp repository.
